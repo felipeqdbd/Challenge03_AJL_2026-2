@@ -1,0 +1,385 @@
+{
+  "metadata": {
+    "seed": 42,
+    "time_axis": "row_order",
+    "frequency_unit": "cycles_per_record",
+    "critical_spot_threshold_rule": "Ener_2_percentile_95"
+  },
+  "audit": {
+    "datasets": [
+      {
+        "dataset": "agro_clean",
+        "filas": 2000,
+        "columnas": 14,
+        "nulos": 0,
+        "duplicados": 0,
+        "source_nodes": 14,
+        "target_nodes": 15
+      },
+      {
+        "dataset": "agro_noise",
+        "filas": 2000,
+        "columnas": 14,
+        "nulos": 0,
+        "duplicados": 0,
+        "source_nodes": 14,
+        "target_nodes": 15
+      },
+      {
+        "dataset": "ener_clean",
+        "filas": 2000,
+        "columnas": 14,
+        "nulos": 0,
+        "duplicados": 0,
+        "source_nodes": 20,
+        "target_nodes": 50
+      },
+      {
+        "dataset": "ener_noise",
+        "filas": 2000,
+        "columnas": 14,
+        "nulos": 0,
+        "duplicados": 0,
+        "source_nodes": 20,
+        "target_nodes": 50
+      }
+    ],
+    "topology": {
+      "agro": {
+        "same_shape": true,
+        "same_edges": true,
+        "unique_edges": 210,
+        "same_source_target_rows": true
+      },
+      "ener": {
+        "same_shape": true,
+        "same_edges": true,
+        "unique_edges": 865,
+        "same_source_target_rows": true
+      }
+    }
+  },
+  "geo": {
+    "cluster_count": 6,
+    "low_ndvi_threshold": 0.8566825987690594,
+    "eta_squared": 0.00424006911963535,
+    "permutation_p": 0.114,
+    "lowest_ndvi_cluster": 4,
+    "priority_cluster": 1,
+    "priority_cluster_latitude": 6.260809288940388,
+    "priority_cluster_longitude": -75.34254528341866,
+    "priority_cluster_ndvi": 1.1452835404558261,
+    "priority_cluster_wind_variance": 2.6259988588831567,
+    "wind_variance_levene_p": 0.5289272182620474,
+    "gps_latitude_rmse": {
+      "raw": 0.010173792543416505,
+      "3": 0.05368131539251255,
+      "5": 0.05644838913834892,
+      "9": 0.05732062818163251,
+      "21": 0.05804479579619356,
+      "51": 0.058706848866255795
+    },
+    "cluster_table": [
+      {
+        "cluster": 0,
+        "n": 316,
+        "latitude": 6.1580748914135865,
+        "longitude": -75.46918471221706,
+        "ndvi_mean": 1.135628410042275,
+        "humidity_mean": 60.22580506812378,
+        "low_ndvi_share": 0.25316455696202533,
+        "wind_variance": 2.4179166953272624,
+        "risk_score": 1.5112969810580967
+      },
+      {
+        "cluster": 1,
+        "n": 406,
+        "latitude": 6.260809288940388,
+        "longitude": -75.34254528341866,
+        "ndvi_mean": 1.1452835404558261,
+        "humidity_mean": 60.042546221372305,
+        "low_ndvi_share": 0.2512315270935961,
+        "wind_variance": 2.6259988588831567,
+        "risk_score": 2.2961850398244095
+      },
+      {
+        "cluster": 2,
+        "n": 267,
+        "latitude": 6.128417945326153,
+        "longitude": -75.39568758167509,
+        "ndvi_mean": 1.186905904956553,
+        "humidity_mean": 60.820596749257845,
+        "low_ndvi_share": 0.250936329588015,
+        "wind_variance": 2.314189866377852,
+        "risk_score": -1.1860145465340006
+      },
+      {
+        "cluster": 3,
+        "n": 398,
+        "latitude": 6.26019284934077,
+        "longitude": -75.45257978839534,
+        "ndvi_mean": 1.1959630954418499,
+        "humidity_mean": 59.77176749751792,
+        "low_ndvi_share": 0.2185929648241206,
+        "wind_variance": 2.0990381257774886,
+        "risk_score": -2.780376869796382
+      },
+      {
+        "cluster": 4,
+        "n": 330,
+        "latitude": 6.15764525636711,
+        "longitude": -75.3308597381677,
+        "ndvi_mean": 1.1342693776628887,
+        "humidity_mean": 61.12801520536301,
+        "low_ndvi_share": 0.2727272727272727,
+        "wind_variance": 2.13692475740879,
+        "risk_score": -0.02877355406283788
+      },
+      {
+        "cluster": 5,
+        "n": 283,
+        "latitude": 6.2087736514005405,
+        "longitude": -75.40141882309507,
+        "ndvi_mean": 1.1510845979004822,
+        "humidity_mean": 61.23752940217851,
+        "low_ndvi_share": 0.26148409893992935,
+        "wind_variance": 2.296754537649514,
+        "risk_score": 0.1876829495107146
+      }
+    ]
+  },
+  "stationarity": {
+    "window": 50,
+    "nonstationary_series": [
+      "Ener_1",
+      "Ener_2",
+      "Ener_3",
+      "Ener_5",
+      "Ener_6",
+      "Ener_7"
+    ],
+    "stationary_series": [
+      "Ener_4",
+      "Ener_8",
+      "Ener_9",
+      "Ener_10"
+    ],
+    "adf_table": [
+      {
+        "series": "Ener_1",
+        "adf_level": -1.86689108744096,
+        "p_level": 0.3477932313370411,
+        "adf_first_difference": -5.018335408147139,
+        "p_first_difference": 2.041162051883302e-05,
+        "integration_order": 1
+      },
+      {
+        "series": "Ener_2",
+        "adf_level": -1.4791345922855952,
+        "p_level": 0.5438067534438132,
+        "adf_first_difference": -18.107408700202935,
+        "p_first_difference": 2.543239158519391e-30,
+        "integration_order": 1
+      },
+      {
+        "series": "Ener_3",
+        "adf_level": -1.9284412491076575,
+        "p_level": 0.31880198164291274,
+        "adf_first_difference": -5.071523294040716,
+        "p_first_difference": 1.5990077614599166e-05,
+        "integration_order": 1
+      },
+      {
+        "series": "Ener_4",
+        "adf_level": -13368213088.72741,
+        "p_level": 0.0,
+        "adf_first_difference": -1590503.723563205,
+        "p_first_difference": 0.0,
+        "integration_order": 0
+      },
+      {
+        "series": "Ener_5",
+        "adf_level": -0.34770765089206734,
+        "p_level": 0.9184704540337373,
+        "adf_first_difference": -43.656308149680164,
+        "p_first_difference": 0.0,
+        "integration_order": 1
+      },
+      {
+        "series": "Ener_6",
+        "adf_level": 0.9526991309241427,
+        "p_level": 0.9937409285971261,
+        "adf_first_difference": -30.635511840836486,
+        "p_first_difference": 0.0,
+        "integration_order": 1
+      },
+      {
+        "series": "Ener_7",
+        "adf_level": -0.4244450629014581,
+        "p_level": 0.905936626772258,
+        "adf_first_difference": -14.768127582241098,
+        "p_first_difference": 2.34522041333264e-27,
+        "integration_order": 1
+      },
+      {
+        "series": "Ener_8",
+        "adf_level": -46.036343080965956,
+        "p_level": 0.0,
+        "adf_first_difference": -14.797427402162509,
+        "p_first_difference": 2.124952841483103e-27,
+        "integration_order": 0
+      },
+      {
+        "series": "Ener_9",
+        "adf_level": -45.35819266895023,
+        "p_level": 0.0,
+        "adf_first_difference": -15.51989763103175,
+        "p_first_difference": 2.2907154588480624e-28,
+        "integration_order": 0
+      },
+      {
+        "series": "Ener_10",
+        "adf_level": -43.71510671599422,
+        "p_level": 0.0,
+        "adf_first_difference": -17.184778720024273,
+        "p_first_difference": 6.611042210929742e-30,
+        "integration_order": 0
+      }
+    ],
+    "ener5": {
+      "adf_level_p": 0.9184704540337373,
+      "adf_difference_p": 0.0,
+      "mean_increment": 0.01056022672227743,
+      "increment_ttest_p": 3.307687902041935e-06,
+      "ljung_box_lag10_p": 0.16554129814822927,
+      "interpretation": "random_walk_with_positive_drift"
+    }
+  },
+  "signals": {
+    "ener4": {
+      "empirical_snr_db": 8.534146151048095,
+      "excess_power_90_band": [
+        0.00390625,
+        0.46484375
+      ],
+      "nyquist": 0.5,
+      "high_frequency_power_gain_db": 81.55794937085102,
+      "interpretation": "broadband_awgn"
+    },
+    "agro3_filter": {
+      "order": 4,
+      "selected_cutoff_cycles_per_record": 0.01,
+      "calibration_fraction": 0.6,
+      "raw_rmse": 3.3414339016607078,
+      "filtered_rmse": 0.8454324903422402,
+      "reconstruction_improvement_pct": 74.69851221889931,
+      "prediction_lags": 24,
+      "prediction_raw_rmse": 1.5688840052231658,
+      "prediction_filtered_rmse": 3.1461622200352592,
+      "prediction_improved": false
+    }
+  },
+  "graphs": {
+    "nodes": 70,
+    "unique_edges": 865,
+    "is_directed_acyclic": true,
+    "directed_betweenness_max": 0.0,
+    "directed_betweenness_ties_at_max": 70,
+    "traffic_bottleneck": 119,
+    "traffic_bottleneck_records": 120,
+    "sensitivity_bottleneck": 119,
+    "sensitivity_betweenness": 0.03774036949149268,
+    "bridges_undirected": [],
+    "node_214": {
+      "degree_centrality": 0.2318840579710145,
+      "directed_betweenness": 0.0,
+      "undirected_betweenness": 0.002254491476950263,
+      "traffic_records": 27,
+      "spot_price_p95": 182.07804866370597,
+      "normal_price_target_rate": 0.013157894736842105,
+      "high_price_target_rate": 0.02,
+      "high_price_odds_ratio": 1.530612244897959,
+      "fisher_p": 0.3946372908819736,
+      "temperature_mean": 24.44825141944128,
+      "temperature_others_mean": 24.755626492684545,
+      "temperature_difference": -0.3073750732432643,
+      "temperature_test_p": 0.6539392829158831
+    }
+  },
+  "models": {
+    "granger": {
+      "lag_selection": "VAR_AIC",
+      "selected_lag": 1,
+      "power_factor_to_voltage": {
+        "lag": 1,
+        "f_statistic": 1.063894363675347,
+        "p_value": 0.3024536108188263
+      },
+      "voltage_to_power_factor": {
+        "lag": 1,
+        "f_statistic": 0.040028317724848904,
+        "p_value": 0.8414456052451492
+      }
+    },
+    "arimax": {
+      "order": [
+        2,
+        1,
+        2
+      ],
+      "aic_temperature": 8743.948906082409,
+      "aic_temperature_centrality": 8745.147446938448,
+      "delta_aic_extended_minus_base": 1.1985408560394717,
+      "centrality_coefficient": 0.11285813493587495,
+      "centrality_p_value": 0.015257071831797425,
+      "holdout": {
+        "temperature": {
+          "rmse": 30.704462658314807,
+          "mae": 27.768764839717086
+        },
+        "temperature_centrality": {
+          "rmse": 30.615482612446907,
+          "mae": 27.691549257814575
+        }
+      }
+    }
+  },
+  "validation": {
+    "spurious_correlation": {
+      "pair": "Ener_5_vs_Ener_6",
+      "level_correlation": -0.9871862372781379,
+      "first_difference_correlation": 0.01822427159261
+    },
+    "snr_5db_arma": {
+      "series": "Agro_7",
+      "empirical_snr_db": 5.004506327971081,
+      "model_order": [
+        2,
+        1,
+        1
+      ],
+      "clean_coefficients": {
+        "ar.L1": 2.001470281471447,
+        "ar.L2": -0.9998642981056162,
+        "ma.L1": -0.7911071690673696
+      },
+      "noise_coefficients": {
+        "ar.L1": -0.013941428111781175,
+        "ar.L2": 0.03392191267834416,
+        "ma.L1": -0.983573783775372
+      },
+      "coefficient_l2_shift": 2.273244748483851,
+      "clean_aic": -34722.436939208885,
+      "noise_aic": 11687.585713031254
+    },
+    "topology_bridge": {
+      "observed_bridges": [],
+      "bridge_count": 0,
+      "conditional_interpretation": "A bridge failure would split connectivity, but no bridge is observed."
+    },
+    "geo_variance": {
+      "wind_variance_levene_p": 0.5289272182620474,
+      "observed_position_effect": false
+    }
+  }
+}

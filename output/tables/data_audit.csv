@@ -1,0 +1,5 @@
+dataset,filas,columnas,nulos,duplicados,source_nodes,target_nodes
+agro_clean,2000,14,0,0,14,15
+agro_noise,2000,14,0,0,14,15
+ener_clean,2000,14,0,0,20,50
+ener_noise,2000,14,0,0,20,50
