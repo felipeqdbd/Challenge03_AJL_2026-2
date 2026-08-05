@@ -1,4 +1,4 @@
-# Challenge 02 - Inteligencia Geo-Temporal y de Redes
+# Challenge 03 - Inteligencia Geo-Temporal y de Redes
 
 Solucion reproducible del taller de la Maestria en Ciencia de los Datos de EAFIT. El proyecto integra analisis geoespacial, estacionariedad, procesamiento de senales, grafos, causalidad de Granger y ARIMAX sobre los activos de TechLogistics S.A.
 
