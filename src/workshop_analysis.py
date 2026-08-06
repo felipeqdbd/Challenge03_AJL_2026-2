@@ -219,10 +219,9 @@ def analyze_geospatial(
         center="median",
     )
 
-    # Mapa interactivo solicitado. Se conserva scatter_mapbox por trazabilidad con el enunciado.
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", DeprecationWarning)
-        map_figure = px.scatter_mapbox(
+    # Mapa interactivo solicitado por el enunciado (Tarea 1: scatter_mapbox). requirements.txt
+    # fija plotly<6 para que esta API siga vigente sin advertencia de obsolescencia.
+    map_figure = px.scatter_mapbox(
             agro,
             lat="Latitude",
             lon="Longitude",
@@ -497,6 +496,33 @@ def analyze_signals(
         )
         candidates.append((calibration_rmse, float(cutoff)))
     _, selected_cutoff = min(candidates)
+
+    # Comparacion de orden del Butterworth (H6): a igual frecuencia de corte, se mide
+    # RMSE de reconstruccion, atenuacion en 2x el corte (empinamiento del rolloff) y el
+    # sobreimpulso (ringing) de la respuesta al escalon, ya que filtfilt cancela el
+    # desfase pero no el sobreimpulso propio de un orden alto.
+    order_rows = []
+    step_input = np.concatenate([np.zeros(60), np.ones(140)])
+    for order in (2, 4, 6):
+        order_sos = signal.butter(order, selected_cutoff, btype="low", fs=1.0, output="sos")
+        order_filtered = signal.sosfiltfilt(order_sos, noisy_humidity)
+        order_rmse = float(np.sqrt(np.mean((order_filtered - clean_humidity) ** 2)))
+        _, magnitude = signal.sosfreqz(order_sos, worN=[selected_cutoff * 2], fs=1.0)
+        attenuation_2x_cutoff_db = float(20 * np.log10(np.abs(magnitude[0]) + 1e-12))
+        step_response = signal.sosfilt(order_sos, step_input)
+        overshoot_pct = float(100 * max(0.0, step_response.max() - 1.0))
+        order_rows.append(
+            {
+                "order": order,
+                "cutoff_cycles_per_record": selected_cutoff,
+                "reconstruction_rmse": order_rmse,
+                "attenuation_at_2x_cutoff_db": attenuation_2x_cutoff_db,
+                "step_overshoot_pct": overshoot_pct,
+            }
+        )
+    butterworth_order_table = pd.DataFrame(order_rows)
+    butterworth_order_table.to_csv(paths["tables"] / "butterworth_orden.csv", index=False)
+
     sos = signal.butter(4, selected_cutoff, btype="low", fs=1.0, output="sos")
     filtered_humidity = signal.sosfiltfilt(sos, noisy_humidity)
     raw_rmse = float(np.sqrt(np.mean((noisy_humidity - clean_humidity) ** 2)))
@@ -572,6 +598,8 @@ def analyze_signals(
         },
         "agro3_filter": {
             "order": 4,
+            "order_justification": "order_comparison_table",
+            "order_comparison": order_rows,
             "selected_cutoff_cycles_per_record": selected_cutoff,
             "calibration_fraction": 0.60,
             "raw_rmse": raw_rmse,
@@ -1033,6 +1061,11 @@ def _to_builtin(value: Any) -> Any:
 def run_analysis(root: Path) -> dict[str, Any]:
     """Ejecuta el flujo completo y devuelve todas las metricas serializables."""
 
+    # Semilla global explicita (SEED=42): cubre cualquier uso incidental de np.random
+    # ademas de los usos locales ya sembrados (KMeans en analyze_geospatial, rng de
+    # la prueba por permutaciones). No hay generacion sintetica de ruido en el pipeline:
+    # las columnas "noise" provienen integramente de agro_noise.csv / ener_noise.csv.
+    np.random.seed(SEED)
     _configure_plots()
     paths = output_paths(root)
     data = load_datasets(root)
