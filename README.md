@@ -2,6 +2,16 @@
 
 Solucion reproducible del taller de la Maestria en Ciencia de los Datos de EAFIT. El proyecto integra analisis geoespacial, estacionariedad, procesamiento de senales, grafos, causalidad de Granger y ARIMAX sobre los activos de TechLogistics S.A.
 
+Nota de numeracion: el PDF fuente del docente (`Lecture_03_Challenge.pdf`) usa "Challenge 02" en su encabezado interno; este repositorio se normalizo a "Challenge 03" en todos sus propios entregables (README, CHECKLIST, notebook e informe).
+
+## Integrantes
+
+| Nombre | Cedula |
+|---|---|
+| Juan Jose Restrepo | 1193082063 |
+| Luis Felipe Quesada | 1005755239 |
+| Andres Velez Rendon | 1001371042 |
+
 ## Entregables
 
 - `notebooks/01_inteligencia_geo_temporal_redes.ipynb`: notebook ejecutado y documentado. Cada celda de codigo esta precedida por una explicacion Markdown.
@@ -13,6 +23,10 @@ Solucion reproducible del taller de la Maestria en Ciencia de los Datos de EAFIT
 - `src/workshop_analysis.py`: implementacion reutilizable del analisis.
 - `src/report_builder.py`: constructor del informe PDF.
 - `CHECKLIST.md`: trazabilidad entre cada requisito y su evidencia.
+- [`AUDITORIA.md`](AUDITORIA.md): auditoria tecnica de la entrega (hallazgos H1-H7 y plan de correccion).
+- [`DECLARACION_USO_IA.md`](DECLARACION_USO_IA.md): declaracion de uso de inteligencia artificial en este repositorio.
+- `tests/`: pruebas minimas de estructura de la entrega.
+- `.github/workflows/ci.yml`: integracion continua (instala `requirements-lock.txt` y corre `tests/`).
 
 Los cuatro CSV y los tres PDF de referencia se conservan sin modificaciones en la raiz del proyecto.
 
@@ -28,22 +42,32 @@ Los cuatro CSV y los tres PDF de referencia se conservan sin modificaciones en l
 
 ## Reproduccion
 
-Desde la raiz del proyecto:
+Desde la raiz del proyecto, en Linux o macOS:
 
-```powershell
+```bash
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+source .venv/bin/activate
 python -m pip install -r requirements.txt
 python run_pipeline.py
 ```
 
-En Linux o macOS, active el entorno con `source .venv/bin/activate`.
+En Windows, active el entorno con `.\.venv\Scripts\Activate.ps1` en vez de `source .venv/bin/activate`.
 
 El comando regenera tablas, figuras, mapa interactivo, metricas, informe y notebook. Para validar la estructura basica:
 
-```powershell
+```bash
 python -m unittest discover -s tests -v
 ```
+
+### Entorno de referencia (determinismo)
+
+`requirements.txt` fija techos de version compatibles entre si (en particular `pandas<3` y `plotly<6`, ver `AUDITORIA.md` hallazgo H5/H7). Para reproducir exactamente el entorno usado para generar los artefactos de este repositorio, use `requirements-lock.txt` en vez de `requirements.txt`:
+
+```bash
+python -m pip install -r requirements-lock.txt
+```
+
+`requirements-lock.txt` es la salida de `pip freeze` sobre un venv limpio con Python 3.13.11. Se verifico que dos ejecuciones independientes de `python run_pipeline.py` en venvs limpios separados, con ese entorno congelado, producen un `output/metrics.json` identico campo a campo (0 diferencias en 267 campos hoja comparados de forma recursiva). El detalle de esa prueba de determinismo esta en `AUDITORIA.md`.
 
 ## Decisiones metodologicas
 
@@ -65,5 +89,5 @@ Para conservar un historial claro al publicar en GitHub:
 
 ## Autoria y uso academico
 
-Entrega individual. Revise el contenido, agregue su nombre y enlace del repositorio antes de enviarlo por la plataforma oficial de la universidad.
+Entrega grupal (ver seccion Integrantes). Antes de enviar por la plataforma oficial de la universidad, revise que el enlace del repositorio en la plataforma apunte a esta rama o a `main` tras el merge, y revise `DECLARACION_USO_IA.md` si la politica del curso exige declarar el uso de asistencia de IA.
 
