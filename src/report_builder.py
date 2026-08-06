@@ -757,15 +757,14 @@ def build_report(root: Path, metrics: dict | None = None) -> Path:
     story.append(_paragraph("Fuentes del encargo", styles["h2"]))
     story.append(
         _paragraph(
-            "Lecture_03_Challenge.pdf; Lecture_03_checklist.pdf; Lecture_03_dictionary.pdf; "
-            "agro_clean.csv; agro_noise.csv; ener_clean.csv; ener_noise.csv. Todos se conservan en la raiz del repositorio.",
+            "agro_clean.csv; agro_noise.csv; ener_clean.csv; ener_noise.csv. Los cuatro se conservan en la raiz del repositorio.",
             styles["body"],
         )
     )
     story.append(
         _callout(
             "Cierre: la entrega cumple las cuatro fases, responde las preguntas de negocio y autoevaluacion, y deja "
-            "evidencia reproducible. Antes de publicar, complete el nombre del estudiante y la URL del repositorio.",
+            "evidencia reproducible.",
             styles,
         )
     )

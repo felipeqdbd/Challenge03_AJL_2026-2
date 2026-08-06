@@ -243,7 +243,7 @@ display(Image(filename=str(ROOT / "output" / "figures" / "11_snr_arma.png"), wid
 - La centralidad no reduce el AIC de la Demanda y no hay Granger entre factor de potencia y voltaje.
 - La inversión hídrica debe comenzar como piloto medible, porque el patrón espacial y la relación viento-pendiente no son concluyentes en los datos.
 
-El informe ejecutivo en `output/pdf/informe_tecnico.pdf` contiene la discusión completa, limitaciones, plan de acción y trazabilidad contra el checklist.
+El informe ejecutivo en `output/pdf/informe_tecnico.pdf` contiene la discusión completa, limitaciones y plan de acción.
 """
         ),
     ]

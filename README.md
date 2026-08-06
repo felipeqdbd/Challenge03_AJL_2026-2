@@ -2,7 +2,7 @@
 
 Solucion reproducible del taller de la Maestria en Ciencia de los Datos de EAFIT. El proyecto integra analisis geoespacial, estacionariedad, procesamiento de senales, grafos, causalidad de Granger y ARIMAX sobre los activos de TechLogistics S.A.
 
-Nota de numeracion: el PDF fuente del docente (`Lecture_03_Challenge.pdf`) usa "Challenge 02" en su encabezado interno; este repositorio se normalizo a "Challenge 03" en todos sus propios entregables (README, CHECKLIST, notebook e informe).
+Nota de numeracion: el enunciado del docente usa "Challenge 02" en su encabezado interno; este repositorio se normalizo a "Challenge 03" en todos sus propios entregables (README, notebook e informe).
 
 ## Integrantes
 
@@ -19,16 +19,12 @@ Nota de numeracion: el PDF fuente del docente (`Lecture_03_Challenge.pdf`) usa "
 - `output/figures/`: evidencia grafica en formato PNG.
 - `output/interactive/mapa_agro_ndvi.html`: mapa geoespacial interactivo sin necesidad de token Mapbox.
 - `output/tables/`: resultados tabulares en CSV.
-- `output/metrics.json`: metricas completas para auditoria.
+- `output/metrics.json`: metricas completas del analisis.
 - `src/workshop_analysis.py`: implementacion reutilizable del analisis.
 - `src/report_builder.py`: constructor del informe PDF.
-- `CHECKLIST.md`: trazabilidad entre cada requisito y su evidencia.
-- [`AUDITORIA.md`](AUDITORIA.md): auditoria tecnica de la entrega (hallazgos H1-H7 y plan de correccion).
 - [`DECLARACION_USO_IA.md`](DECLARACION_USO_IA.md): declaracion de uso de inteligencia artificial en este repositorio.
-- `tests/`: pruebas minimas de estructura de la entrega.
-- `.github/workflows/ci.yml`: integracion continua (instala `requirements-lock.txt` y corre `tests/`).
 
-Los cuatro CSV y los tres PDF de referencia se conservan sin modificaciones en la raiz del proyecto.
+Los cuatro CSV se conservan sin modificaciones en la raiz del proyecto.
 
 ## Hallazgos principales
 
@@ -53,21 +49,17 @@ python run_pipeline.py
 
 En Windows, active el entorno con `.\.venv\Scripts\Activate.ps1` en vez de `source .venv/bin/activate`.
 
-El comando regenera tablas, figuras, mapa interactivo, metricas, informe y notebook. Para validar la estructura basica:
-
-```bash
-python -m unittest discover -s tests -v
-```
+El comando regenera tablas, figuras, mapa interactivo, metricas, informe y notebook.
 
 ### Entorno de referencia (determinismo)
 
-`requirements.txt` fija techos de version compatibles entre si (en particular `pandas<3` y `plotly<6`, ver `AUDITORIA.md` hallazgo H5/H7). Para reproducir exactamente el entorno usado para generar los artefactos de este repositorio, use `requirements-lock.txt` en vez de `requirements.txt`:
+`requirements.txt` fija techos de version compatibles entre si (en particular `pandas<3` y `plotly<6`). Para reproducir exactamente el entorno usado para generar los artefactos de este repositorio, use `requirements-lock.txt` en vez de `requirements.txt`:
 
 ```bash
 python -m pip install -r requirements-lock.txt
 ```
 
-`requirements-lock.txt` es la salida de `pip freeze` sobre un venv limpio con Python 3.13.11. Se verifico que dos ejecuciones independientes de `python run_pipeline.py` en venvs limpios separados, con ese entorno congelado, producen un `output/metrics.json` identico campo a campo (0 diferencias en 267 campos hoja comparados de forma recursiva). El detalle de esa prueba de determinismo esta en `AUDITORIA.md`.
+`requirements-lock.txt` es la salida de `pip freeze` sobre un venv limpio con Python 3.13.11. Se verifico que dos ejecuciones independientes de `python run_pipeline.py` en venvs limpios separados, con ese entorno congelado, producen un `output/metrics.json` identico campo a campo.
 
 ## Decisiones metodologicas
 
@@ -81,11 +73,10 @@ python -m pip install -r requirements-lock.txt
 
 Para conservar un historial claro al publicar en GitHub:
 
-1. `chore: agrega datos y documentos fuente`
+1. `chore: agrega datos fuente`
 2. `feat: implementa analisis geo-temporal y de senales`
 3. `feat: agrega grafos, Granger y ARIMAX`
 4. `docs: incorpora notebook ejecutado e informe tecnico`
-5. `ci: agrega validacion reproducible`
 
 ## Autoria y uso academico
 
