@@ -30,11 +30,12 @@ def build_notebook(root: Path, metrics: dict | None = None, execute: bool = True
     graph = metrics["graphs"]
     models = metrics["models"]
     validation = metrics["validation"]
+    butter_order = {row["order"]: row for row in signals["agro3_filter"]["order_comparison"]}
 
     cells = [
         _md(
             """
-# Challenge 02: Inteligencia Geo-Temporal y de Redes
+# Challenge 03: Inteligencia Geo-Temporal y de Redes
 
 **Optimización de activos críticos - TechLogistics S.A.**  
 Maestría en Ciencia de los Datos, Universidad EAFIT, periodo 2026-1.
@@ -127,6 +128,8 @@ pd.Series(metrics["geo"]["gps_latitude_rmse"], name="RMSE_latitud").to_frame()
 ## 3. ADF, diferenciación y ventana de 50
 
 ADF se aplica a las diez series clean. Las series no estacionarias son: **{', '.join(stationarity['nonstationary_series'])}**. Para ellas se generan media y varianza móvil de 50 registros. `Ener_5` no rechaza raíz unitaria en nivel y sí en primera diferencia; el incremento medio positivo y la falta de autocorrelación significativa en los incrementos son compatibles con random walk con drift.
+
+**Nota metodológica sobre `Ener_4`.** El estadístico ADF en nivel de `Ener_4` (columna `adf_level` de la tabla siguiente) tiene una magnitud fuera de escala respecto a las demás nueve series (del orden de 10⁹ o 10¹⁰, y ese valor no es estable entre entornos: en una reejecución en un entorno limpio distinto se obtuvo un valor de magnitud similar pero distinto en varios miles de millones). La causa no es un problema de los datos ni un artefacto de varianza casi nula (`Ener_4` tiene varianza normal, ≈200, muy similar a las demás series de energía): `Ener_4` es una trayectoria muy suave y casi determinística registro a registro (incrementos con desviación estándar ≈0.28 frente a un nivel con desviación estándar ≈14), lo que vuelve casi colineal la matriz de diseño de la regresión interna del ADF (nivel rezagado contra sus propios rezagos) y amplifica cualquier redondeo de punto flotante en un estadístico t que ya diverge. A pesar de esa inestabilidad numérica en el valor crudo del estadístico, el **p-valor asociado se satura en 0.0 en ambos entornos** (ver `p_level` en la tabla) y la conclusión de estacionariedad de `Ener_4` (`integration_order = 0`) es idéntica y robusta; solo la magnitud del estadístico crudo, no la decisión, depende del entorno numérico.
 """
         ),
         _code(
@@ -156,6 +159,8 @@ display(Image(filename=str(ROOT / "output" / "figures" / "05_espectrogramas_ener
 Se calibra un paso bajo Butterworth de orden 4 en el primer 60% de la pareja clean/noise. El corte seleccionado es {signals['agro3_filter']['selected_cutoff_cycles_per_record']:.4f} ciclos por registro. El RMSE offline baja de {signals['agro3_filter']['raw_rmse']:.3f} a {signals['agro3_filter']['filtered_rmse']:.3f}.
 
 Para responder si mejora la predicción se ejecuta un AR(24) de un paso con información exclusivamente pasada. El RMSE cambia de {signals['agro3_filter']['prediction_raw_rmse']:.3f} a {signals['agro3_filter']['prediction_filtered_rmse']:.3f}; por tanto, la reconstrucción mejora, pero la capacidad predictiva desplegable no. Usar `filtfilt` sobre todo el holdout habría introducido fuga temporal.
+
+**Por qué orden 4 y no 2 o 6** (tabla completa en `output/tables/butterworth_orden.csv`, los tres órdenes evaluados con el mismo corte): el orden 2 tiene el menor RMSE de reconstrucción ({butter_order[2]['reconstruction_rmse']:.3f}), pero atenúa apenas {abs(butter_order[2]['attenuation_at_2x_cutoff_db']):.1f} dB al doble del corte, frente a {abs(butter_order[4]['attenuation_at_2x_cutoff_db']):.1f} dB del orden 4 y {abs(butter_order[6]['attenuation_at_2x_cutoff_db']):.1f} dB del orden 6. Esto pesa porque el 98.2% de la potencia del error noise menos clean de `Agro_3` está por encima del corte seleccionado (ruido de banda ancha, como `Ener_4`), así que un orden bajo deja pasar más de ese ruido aunque su RMSE global se vea mejor. El costo de subir el orden es el sobreimpulso (ringing) de la respuesta al escalón, que crece de {butter_order[2]['step_overshoot_pct']:.1f}% (orden 2) a {butter_order[4]['step_overshoot_pct']:.1f}% (orden 4) y {butter_order[6]['step_overshoot_pct']:.1f}% (orden 6); `sosfiltfilt` cancela el desfase neto al aplicar el filtro adelante y atrás, pero no elimina ese sobreimpulso transitorio. Orden 4 queda como punto medio: casi duplica la atenuación fuera de banda del orden 2 sin llegar al RMSE ni al sobreimpulso más altos del orden 6.
 """
         ),
         _code(
@@ -248,7 +253,7 @@ El informe ejecutivo en `output/pdf/informe_tecnico.pdf` contiene la discusión 
         metadata={
             "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
             "language_info": {"name": "python", "version": "3"},
-            "title": "Challenge 02 - Inteligencia Geo-Temporal y de Redes",
+            "title": "Challenge 03 - Inteligencia Geo-Temporal y de Redes",
         },
     )
     destination = root / "notebooks" / "01_inteligencia_geo_temporal_redes.ipynb"

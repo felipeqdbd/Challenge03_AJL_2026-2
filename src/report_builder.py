@@ -248,7 +248,7 @@ def _header_footer(canvas, doc) -> None:
     if doc.page > 1:
         canvas.setFont("DV-Bold", 7.5)
         canvas.setFillColor(NAVY)
-        canvas.drawString(2.0 * cm, height - 1.15 * cm, "Challenge 02 - Inteligencia Geo-Temporal y de Redes")
+        canvas.drawString(2.0 * cm, height - 1.15 * cm, "Challenge 03 - Inteligencia Geo-Temporal y de Redes")
         canvas.setStrokeColor(colors.HexColor("#D0D5DD"))
         canvas.line(2.0 * cm, height - 1.35 * cm, width - 2.0 * cm, height - 1.35 * cm)
     canvas.setFont("DV", 7.2)
@@ -277,7 +277,7 @@ def build_report(root: Path, metrics: dict | None = None) -> Path:
         rightMargin=2.0 * cm,
         topMargin=1.8 * cm,
         bottomMargin=1.6 * cm,
-        title="Informe tecnico - Challenge 02",
+        title="Informe tecnico - Challenge 03",
         author="Entrega academica EAFIT",
         subject="Inteligencia Geo-Temporal y de Redes",
     )
@@ -315,7 +315,8 @@ def build_report(root: Path, metrics: dict | None = None) -> Path:
     story.append(Spacer(1, 1.3 * cm))
     story.append(
         _callout(
-            "Estudiante: [completar antes de la entrega]<br/>Fecha del analisis: agosto de 2026",
+            "Integrantes: Juan Jose Restrepo (C.C. 1193082063), Luis Felipe Quesada (C.C. 1005755239), "
+            "Andres Velez Rendon (C.C. 1001371042)<br/>Fecha del analisis: agosto de 2026",
             styles,
             PALE_ORANGE,
         )
@@ -439,6 +440,20 @@ def build_report(root: Path, metrics: dict | None = None) -> Path:
             styles["body"],
         )
     )
+    ener4_row = next(row for row in stationary["adf_table"] if row["series"] == "Ener_4")
+    story.append(
+        _paragraph(
+            f"Nota metodologica sobre Ener_4: su estadistico ADF en nivel ({ener4_row['adf_level']:.3g}) tiene una "
+            "magnitud fuera de escala frente a las demas nueve series y no es estable entre entornos de ejecucion "
+            "(varia en miles de millones al reejecutar con otra version de las librerias numericas). La causa no "
+            "es varianza casi nula (Ener_4 tiene varianza normal, en torno a 200): es una trayectoria muy suave y "
+            "casi deterministica registro a registro, lo que casi colineariza la regresion interna del ADF y "
+            "amplifica el redondeo de punto flotante en un estadistico que ya diverge. El p-valor asociado se "
+            "satura en 0.0 en todos los entornos probados y la conclusion de estacionariedad (integration_order = "
+            "0) no cambia: solo la magnitud cruda del estadistico depende del entorno, no la decision.",
+            styles["body"],
+        )
+    )
     story += _figure(
         figures / "03_estacionariedad_ener5.png",
         "Figura 3. Ener_5 no rechaza raiz unitaria en nivel; sus incrementos son estacionarios y compatibles con ruido blanco alrededor de un drift positivo.",
@@ -497,6 +512,26 @@ def build_report(root: Path, metrics: dict | None = None) -> Path:
             f"historia disponible, el RMSE cambia de {filt['prediction_raw_rmse']:.3f} a "
             f"{filt['prediction_filtered_rmse']:.3f}. El filtrado offline no mejora la capacidad predictiva "
             "desplegable y no debe evaluarse con filtfilt sobre todo el holdout, pues eso introduciria fuga temporal.",
+            styles["body"],
+        )
+    )
+    order_cmp = {row["order"]: row for row in filt["order_comparison"]}
+    story.append(
+        _paragraph(
+            "Justificacion del orden 4 (tabla completa en output/tables/butterworth_orden.csv, ordenes 2, 4 y 6 "
+            f"evaluados con el mismo corte de {filt['selected_cutoff_cycles_per_record']:.4f} ciclos por registro): "
+            f"el orden 2 obtiene el RMSE de reconstruccion mas bajo ({order_cmp[2]['reconstruction_rmse']:.3f}), "
+            f"pero atenua apenas {abs(order_cmp[2]['attenuation_at_2x_cutoff_db']):.1f} dB al doble del corte, "
+            f"contra {abs(order_cmp[4]['attenuation_at_2x_cutoff_db']):.1f} dB del orden 4 y "
+            f"{abs(order_cmp[6]['attenuation_at_2x_cutoff_db']):.1f} dB del orden 6. Esto importa porque el 98.2% "
+            "de la potencia del error noise-clean de Agro_3 esta por encima del corte seleccionado (ruido de banda "
+            "ancha, igual que Ener_4): un orden bajo deja pasar mas de ese ruido fuera de banda aunque su RMSE "
+            "global se vea mejor. El costo de subir el orden es el sobreimpulso (ringing) de la respuesta al "
+            f"escalon, que crece de {order_cmp[2]['step_overshoot_pct']:.1f}% (orden 2) a "
+            f"{order_cmp[4]['step_overshoot_pct']:.1f}% (orden 4) y {order_cmp[6]['step_overshoot_pct']:.1f}% "
+            "(orden 6); sosfiltfilt aplica el filtro dos veces (adelante y atras) y cancela el desfase neto, pero "
+            "no elimina ese sobreimpulso transitorio. El orden 4 se elige como punto medio: duplica la atenuacion "
+            "fuera de banda del orden 2 sin llegar al RMSE mas alto ni al mayor sobreimpulso del orden 6.",
             styles["body"],
         )
     )
