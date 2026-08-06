@@ -148,6 +148,13 @@ def _paragraph(text: str, style: ParagraphStyle) -> Paragraph:
     return Paragraph(text, style)
 
 
+def _format_p_value(value: float, spec: str) -> str:
+    """Formatea un p-valor; si hizo underflow a 0.0 lo marca como '< 1e-30'."""
+    if value == 0.0:
+        return "< 1e-30"
+    return format(value, spec)
+
+
 def _section_title(number: str, title: str, styles: dict[str, ParagraphStyle]):
     return [
         _paragraph(f"{number} {title}", styles["h1"]),
@@ -426,8 +433,8 @@ def build_report(root: Path, metrics: dict | None = None) -> Path:
         adf_rows.append(
             [
                 row["series"],
-                f"{row['p_level']:.4f}",
-                f"{row['p_first_difference']:.4g}",
+                _format_p_value(row["p_level"], ".4f"),
+                _format_p_value(row["p_first_difference"], ".4g"),
                 f"I({row['integration_order']})",
             ]
         )
@@ -572,7 +579,7 @@ def build_report(root: Path, metrics: dict | None = None) -> Path:
     story.append(PageBreak())
 
     # Negocio
-    story += _section_title("Fase", "4: Preguntas de negocio", styles)
+    story += _section_title("5.", "Fase 4 - Preguntas de negocio", styles)
     story.append(_paragraph("P1. Causalidad y redes", styles["h2"]))
     granger = models["granger"]
     story.append(
